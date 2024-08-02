@@ -1,0 +1,61 @@
+1. Find the names of employees who work in the "Finance" department and have made sales on or after "2023-09-16.
+ANS : db.Sales.aggregate([{ $match: { sale_date: { $gte: ISODate("2023-09-16")}}},{$lookup:{from:"Employee",localField:"employee_id",foreignField:"_id",as:"Employee"}},{$unwind:"$Employee"},{$match:{"Employee.department_id":102}},{$group:{_id:"$Employee._id",name:{$first:"$Employee.name"}}},{$project:{_id:0,name:1}}])
+
+2. Find the total sales count and total sales amount for each employee who has made a sale, and sort the results by total sales amount in descending order.
+ANS : db.Sales.aggregate([{$group:{_id:"$employee_id",total_sale:{$sum:"$amount"},tota_sales_count:{$count:{}}}},{$sort:{total_sale:-1}}])
+
+3. Retrieve a list of departments with more than 10 employees
+ANS : db.Employee.aggregate([{$group:{_id:"$department_id",total_employee:{$count:{}}}},{$match:{total_employee:{$gt:10}}},{$lookup:{from:"Department",localField:"_id",foreignField:"_id",as:"Department"}},{$unwind:"$Department"},{$project:{_id:1,name:"$Department.name",total_employee:1}}])
+
+4. Find the employees who have worked in the company for more than 5 years
+ANS : db.Employee.aggregate([{$project:{name:1,year:{$dateDiff:{startDate:"$hire_date",endDate:new Date(),unit:"year"}}}},{$match:{year:{$gt:5}}}])
+
+5. Find the employee with the highest salary
+ANS : db.Employee.aggregate([{$project:{name:1,salary:1}},{$sort:{salary:-1}},{$limit:1}])
+
+6. List the names and ages of employees in the "HR" department
+ANS :db.Employee.aggregate([{$match:{department_id:101}},{$project:{name:1,age:1}}])
+
+7. Retrieve the names of employees who have worked on the "Employee Management System" project
+ANS : db.Employee.aggregate([{$match:{projects:301}},{$project:{name:1}}])
+
+8. Find the employees who have not made any sales
+ANS :
+
+9. List the names of employees who have made a sale in September 2023
+ANS : db.Sales.aggregate([{ $match: { sale_date:{$gte: ISODate("2023-09-01"),$lt: ISODate("2023-10-01")}}},{$lookup:{from:"Employee",localField:"employee_id",foreignField:"_id",as:"Employee"}},{$unwind:"$Employee"},{$group:{_id:"$Employee._id",name:{$first:"$Employee.name"}}},{$project:{_id:0,name:1}}])
+
+10. Find the departments where the average employee age is greater than 35
+ANS : 
+
+11. Find the employees who have worked on at least three different projects
+ANS : 
+
+12. List the names of employees who have not been assigned to any project
+ANS : 
+
+13. Find the employees who have worked on projects from multiple departments
+ANS : 
+
+14. Find the employees who have the highest sales amount in a single sale
+ANS : 
+
+14. Retrieve the names of employees who have not made a sale in the last 90 days
+ANS :
+
+15. Find the departments where the total employee salaries exceed $500,000
+ANS :
+
+16. List the employees who have worked on the "Payroll Software" project and are older than 35
+ANS : 
+
+17. Find the total number of sales and the total sales amount for each employee in the "HR" department
+ANS : 
+
+18. List the employees who have not been assigned to any project in the "Finance" department
+ANS : 
+
+19.List the employees who have worked on all projects in the "Engineering" department
+ANS : 
+
+
